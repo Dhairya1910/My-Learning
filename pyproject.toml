@@ -1,0 +1,14 @@
+[project]
+name = "my-learning"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dotenv>=0.9.9",
+    "fastmcp>=3.2.0",
+    "langchain>=1.2.15",
+    "langchain-mcp-adapters>=0.2.2",
+    "langchain-mistralai>=1.1.2",
+    "langgraph>=1.1.6",
+]
