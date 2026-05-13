@@ -1,0 +1,23 @@
+{
+  "C001": {
+    "name": "Rolls Royces Phantom",
+    "Price": 8000000,
+    "color": "satin black"
+  },
+  "C002": {
+    "name": "Porsche 911 gt3",
+    "Price": 4000000,
+    "color": "Midnight Blue"
+  },
+  "C003": {
+    "name": "Porsche 911 gt3",
+    "Price": 4000000,
+    "color": "Cherry pink"
+  },
+  "C004": {
+    "name": "Porsche 911 gt3",
+    "Price": 4000000,
+    "color": "Satin black"
+  },
+  "C005": { "name": "ferrari enzo", "Price": 6000000, "color": "hot red" }
+}
