@@ -6,6 +6,7 @@ from typing import List
 from fastapi import FastAPI, Path, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, field_validator, model_validator, computed_field
 
 # -----------------------------------------------
@@ -29,6 +30,19 @@ class car_details(BaseModel):
     manufacture_year: int
     condition: Literal["bad", "good", "excellent"]
     rarity: Literal["common", "rare", "Antique"]
+
+
+class car_update(BaseModel):
+    name: Annotated[Optional[str], Field(default=None)]
+    model: Annotated[Optional[str], Field(default=None)]
+    showroom_price: Annotated[Optional[float], Field(default=None)]
+    manufacture_year: Annotated[Optional[int], Field(default=None)]
+    condition: Annotated[
+        Optional[Literal["bad", "good", "excellent"]], Field(default="None")
+    ]
+    rarity: Annotated[
+        Optional[Literal["common", "rare", "Antique"]], Field(default="None")
+    ]
 
 
 def load_data():
@@ -61,6 +75,45 @@ def add_new_vehicle(body: dict):
     data[car_id] = car.model_dump()
     save_data(data)
     return {"message": "Car added successfully", "car_id": car_id}
+
+
+@app.put("/edit/{car_id}")
+def update_car_details(car_id: str, car_info: car_update):
+    data = load_data()
+
+    if car_id not in data:
+        raise HTTPException(status_code=404, detail="Car not found")
+
+    existing_car_info = data[car_id]
+
+    updated_car_info = car_info.model_dump(exclude_unset=True)
+
+    for key, value in updated_car_info.items():
+        existing_car_info[key] = value
+
+    existing_car_info["id"] = car_id
+    car_pydantic_obj = car_details(**existing_car_info)
+
+    existing_car_info = car_pydantic_obj.model_dump(exclude="id")
+
+    data[car_id] = existing_car_info
+
+    save_data(data)
+
+    return JSONResponse(
+        status_code=200, content={"message": "Data inserted successfully"}
+    )
+
+
+@app.delete("/delete/{car_id}")
+def delete_car(car_id: str):
+    data = load_data()
+
+    if car_id in data:
+        del data[car_id]
+        return JSONResponse(status_code=200, content={"message": "Entry deleted"})
+    else:
+        raise HTTPException(status_code=404, detail={"message": "data not found"})
 
 
 # ----------------------------------------
